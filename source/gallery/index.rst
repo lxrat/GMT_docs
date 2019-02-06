@@ -7,7 +7,7 @@
     points
     symbols
     coast
-    beachball
+    beachball/index
     legend
     earth-relief
     histogram

@@ -26,19 +26,13 @@
    :caption: 震源机制解
 
    #!/bin/bash
-   #   绘制震源机制分布图，震级控制震源球大小，深度控制震源球颜色
 
    J=Q104/15c
    R=102.5/105.5/30.5/32.5
-   PS=GMT_tutor5_1.ps
-
-   gmt pscoast -J$J -R$R -B1 -BWSen -Da -Ia/0.05,black -P -K > $PS
-   echo 104.3300 31.90 39.8 32.00 64.00 85.00 7.0 0 0 A | gmt psmeca -J -R -CP5p -Sa1c -M -K -O >> $PS
+   PS=beachball_1.ps
+   gmt psbasemap -J$J -R$R -BWSEN -Ba -P -K > $PS
+   echo 104.33 31.9 39.8 32 64 85 7 0 0 A | gmt psmeca -J -R -CP5p -Sa1c -M -O>> $PS
    # 依次向 gmt 输入经度、纬度、深度(km)、strike、dip、rake、震级、newX、newY 和 ID
-
-   gmt psscale -J -R -C$CPT -DjBL+w5c/0.5c+ml+o0.8c/0.4c -Bx+lDepth -By+lkm -L -S -K -O >> $PS
-   gmt psxy -J -R -T -O >> $PS
-   rm gmt.*
 
 震源球大小随震级变化
 --------------------
@@ -57,19 +51,17 @@
    :caption: 震源机制解
 
    #!/bin/bash
-   #   绘制震源机制分布图，震级控制震源球大小，深度控制震源球颜色
 
    J=Q104/15c
    R=102.5/105.5/30.5/32.5
-   PS=GMT_tutor5_2.ps
+   PS=beachball_2.ps
 
-   gmt pscoast -J$J -R$R -B1 -BWSen -Da -Ia/0.05,black -P -K > $PS
-   echo 104.3300 31.90 39.8 32.00 64.00 85.00 7.0 0 0 A | gmt psmeca -J -R -CP5p -Sa1c -K -O >> $PS
-   echo 104      31.52 27.1 22.00 53.00 57.00 6.0 0 0 B | gmt psmeca -J -R -CP5p -Sa1c -K -O >> $PS
+   gmt psbasemap -J$J -R$R -BWSEN -Ba -P -K > $PS
+   gmt psmeca -J -R -CP5p -Sa1c -O >> $PS << EOF
+   104.33 31.91 39.8 32 64 85 7 0 0 A
+   104.11 31.52 27.1 22 53 57 6 0 0 B
+   EOF
    # 依次向 gmt 输入经度、纬度、深度(km)、strike、dip、rake、震级、newX、newY 和 ID
-
-   gmt psscale -J -R -C$CPT -DjBL+w5c/0.5c+ml+o0.8c/0.4c -Bx+lDepth -By+lkm -L -S -K -O >> $PS
-   gmt psxy -J -R -T -O >> $PS
    rm gmt.*
 
 震源球大小随震级变化，颜色随深度变化
@@ -88,7 +80,7 @@
 
    J=Q104/15c
    R=102.5/105.5/30.5/32.5
-   PS=beachball.ps
+   PS=beachball_3.ps
    CPT=meca.cpt
 
    # 生成CPT文件，为每个深度段设置不同的颜色
@@ -99,18 +91,17 @@
    60 240-1-1  100 240-1-1
    EOF
 
-   gmt pscoast -J$J -R$R -B1 -BWSen -Da -Ia/0.05,black -P -K > $PS
+   gmt psbasemap -J$J -R$R -BWSEN -Ba -P -K > $PS
    gmt psmeca -J -R -CP5p -Sa1.3c -Z$CPT -K -O >> $PS << EOF
    # 经度 纬度 深度(km) strike dip rake 震级 newX newY ID
-   104.3300  31.90    39.8  32.00 64.00   85.00  7.0 0        0       A
-   104       31.52    27.1  22.00 53.00   57.00  6.0 0        0       B
-   103.6700  31.1300   6.4  86.00 32.00  -65.00  8.0 0        0       C
-   103.900   31.3400  43.6 194.00 84.00  179.00  4.9 104.180  30.8400 D
-   103.7200  31.4400  67.3  73.00 84.00 -162.00  4.9 103.120  31.6400 E
-   104.1200  31.7800  12.7 186.00 68.00  107.00  4.7 103.830  32.2600 F
-   104.2300  31.6100  62.0  86.00 63.00  -51.00  4.7 104.960  31.6900 G
+   104.33 31.91 39.8  32 64   85 7.0      0     0 A
+   104.11 31.52 27.1  22 53   57 6.0      0     0 B
+   103.67 31.13  6.4  86 32  -65 8.0      0     0 C
+   103.90 31.34 43.6 194 84  179 4.9 104.18 30.84 D
+   103.72 31.44 67.3  73 84 -162 4.9 103.12 31.64 E
+   104.12 31.78 12.7 186 68  107 4.7 103.83 32.26 F
+   104.23 31.61 62.0  86 63  -51 4.7 104.96 31.69 G
    EOF
 
-   gmt psscale -J -R -C$CPT -DjBL+w5c/0.5c+ml+o0.8c/0.4c -Bx+lDepth -By+lkm -L -S -K -O >> $PS
-   gmt psxy -J -R -T -O >> $PS
+   gmt psscale -J -R -C$CPT -DjBL+w5c/0.5c+ml+o0.8c/0.4c -Bx+lDepth -By+lkm -L -S -O >> $PS
    rm gmt.* $CPT

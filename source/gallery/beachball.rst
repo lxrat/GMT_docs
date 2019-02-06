@@ -23,7 +23,7 @@
 
 .. gmt-plot::
    :language: bash
-   :caption: 震源机制解
+   :caption: 绘制单个震源球
 
    #!/bin/bash
 
@@ -48,7 +48,7 @@
 
 .. gmt-plot::
    :language: bash
-   :caption: 震源机制解
+   :caption: 震源球大小随震级变化
 
    #!/bin/bash
 
@@ -57,11 +57,11 @@
    PS=beachball_2.ps
 
    gmt psbasemap -J$J -R$R -BWSEN -Ba -P -K > $PS
+   # 依次向 gmt 输入经度、纬度、深度(km)、strike、dip、rake、震级、newX、newY 和 ID
    gmt psmeca -J -R -CP5p -Sa1c -O >> $PS << EOF
    104.33 31.91 39.8 32 64 85 7 0 0 A
    104.11 31.52 27.1 22 53 57 6 0 0 B
    EOF
-   # 依次向 gmt 输入经度、纬度、深度(km)、strike、dip、rake、震级、newX、newY 和 ID
    rm gmt.*
 
 震源球大小随震级变化，颜色随深度变化
@@ -73,7 +73,7 @@
 
 .. gmt-plot::
    :language: bash
-   :caption: 震源机制解
+   :caption: 震源球大小随震级变化，颜色随深度变化
 
    #!/bin/bash
    #   绘制震源机制分布图，震级控制震源球大小，深度控制震源球颜色
@@ -91,7 +91,7 @@
    60 240-1-1  100 240-1-1
    EOF
 
-   gmt psbasemap -J$J -R$R -BWSEN -Ba -P -K > $PS
+   gmt psbasemap -J$J -R$R -Ba -BWSEN -P -K > $PS
    gmt psmeca -J -R -CP5p -Sa1.3c -Z$CPT -K -O >> $PS << EOF
    # 经度 纬度 深度(km) strike dip rake 震级 newX newY ID
    104.33 31.91 39.8  32 64   85 7.0      0     0 A

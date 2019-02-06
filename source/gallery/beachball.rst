@@ -8,7 +8,7 @@
 :doc:`/module/psmeca` 模块用 ``-S`` 选项决定震源球的描述方式，支持的描述方式有五种：
 
 #. Aki-Richards 描述
-#. Harvard CMT、
+#. Harvard CMT
 #. GCMT 零迹矩张量
 #. 两个断层平面的部分参数
 #. T、N、P轴
@@ -16,15 +16,68 @@
 具体请见模块手册。
 
 在告知 gmt 震源机制解的描述方法后，就要根据相应的描述方法，向 gmt 输入相应的数据。
+下面由简到繁讲解。
 
 绘制单个震源球
 --------------
 
+.. gmt-plot::
+   :language: bash
+   :caption: 震源机制解
+
+   #!/bin/bash
+   #   绘制震源机制分布图，震级控制震源球大小，深度控制震源球颜色
+
+   J=Q104/15c
+   R=102.5/105.5/30.5/32.5
+   PS=GMT_tutor5_1.ps
+
+   gmt pscoast -J$J -R$R -B1 -BWSen -Da -Ia/0.05,black -P -K > $PS
+   echo 104.3300 31.90 39.8 32.00 64.00 85.00 7.0 0 0 A | gmt psmeca -J -R -CP5p -Sa1c -M -K -O >> $PS
+   # 依次向 gmt 输入经度、纬度、深度(km)、strike、dip、rake、震级、newX、newY 和 ID
+
+   gmt psscale -J -R -C$CPT -DjBL+w5c/0.5c+ml+o0.8c/0.4c -Bx+lDepth -By+lkm -L -S -K -O >> $PS
+   gmt psxy -J -R -T -O >> $PS
+   rm gmt.*
+
 震源球大小随震级变化
 --------------------
 
+删除参数 -M，即可实现震源球大小随震级变化。
+-Sa1c 的 1c 就是指明 5 级地震的大小为 1c。
+其他地震的大小按照如下公式计算::
+
+        size = M / 5 * <scale>
+
+另外，现在需要画多个地震的震源机制，仍然用 echo 传给 gmt 的形式是不合理的。
+可以用表数据的形式传入。
+
+.. gmt-plot::
+   :language: bash
+   :caption: 震源机制解
+
+   #!/bin/bash
+   #   绘制震源机制分布图，震级控制震源球大小，深度控制震源球颜色
+
+   J=Q104/15c
+   R=102.5/105.5/30.5/32.5
+   PS=GMT_tutor5_2.ps
+
+   gmt pscoast -J$J -R$R -B1 -BWSen -Da -Ia/0.05,black -P -K > $PS
+   echo 104.3300 31.90 39.8 32.00 64.00 85.00 7.0 0 0 A | gmt psmeca -J -R -CP5p -Sa1c -K -O >> $PS
+   echo 104      31.52 27.1 22.00 53.00 57.00 6.0 0 0 B | gmt psmeca -J -R -CP5p -Sa1c -K -O >> $PS
+   # 依次向 gmt 输入经度、纬度、深度(km)、strike、dip、rake、震级、newX、newY 和 ID
+
+   gmt psscale -J -R -C$CPT -DjBL+w5c/0.5c+ml+o0.8c/0.4c -Bx+lDepth -By+lkm -L -S -K -O >> $PS
+   gmt psxy -J -R -T -O >> $PS
+   rm gmt.*
+
 震源球大小随震级变化，颜色随深度变化
 ------------------------------------
+
+现在用压缩区的颜色表示震源的深度。
+先生成一个 cpt 文件，为每个深度段设置不同的颜色。
+然后，使用 psmeca 模块的时候用 -Z 参数调用即可。
 
 .. gmt-plot::
    :language: bash
